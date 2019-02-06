@@ -26,9 +26,7 @@ class FlickrAPI {
         let url = "\(Constants.BASE_URL)?api_key=\(Constants.API_KEY)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(lon)&page=\((1...10).randomElement() ?? 1)"
         
         Alamofire.request(url).responseJSON { (response) in
-            print("Hi")
             if((response.result.value) != nil) {
-                print("bye")
                 let swiftyJsonVar = JSON(response.result.value!)
                 var photosURL: [String] = []
                 
@@ -38,7 +36,6 @@ class FlickrAPI {
                         photosURL.append(photoURL)
                     }
                 }
-                dump(photosURL)
                 completionHandler(photosURL)
             }
             //present error

@@ -69,12 +69,13 @@ class MapViewController: UIViewController {
     // MARK: -Functionalities
     // TODO: add pin by holding on a location on map
     @objc func longPressed(sender: UILongPressGestureRecognizer) {
-        if(sender.state != .began){
-            let touchPoint = sender.location(in: mapView)
-            let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-            addPin(longitude: newCoordinates.longitude, latitude: newCoordinates.latitude)
+        if sender.state != .began {
             return
         }
+        
+        let touchPoint = sender.location(in: mapView)
+        let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+        addPin(longitude: newCoordinates.longitude, latitude: newCoordinates.latitude)
     }
     
     // MARK: -Model Functions
