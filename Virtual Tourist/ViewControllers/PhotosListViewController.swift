@@ -173,7 +173,7 @@ extension PhotosListViewController: UICollectionViewDataSource {
                 print("no!")
                 return cell
             }
-            cell.imageView.kf.setImage(with: url, placeholder: nil, options: nil, progressBlock: nil) { (img, err, cacheType, url) in
+            cell.imageView.kf.setImage(with: url, placeholder: UIImage(named: "Placeholder"), options: nil, progressBlock: nil) { (img, err, cacheType, url) in
                 if ((err) != nil) {
                     
                 } else {

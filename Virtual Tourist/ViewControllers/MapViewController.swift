@@ -69,9 +69,12 @@ class MapViewController: UIViewController {
     // MARK: -Functionalities
     // TODO: add pin by holding on a location on map
     @objc func longPressed(sender: UILongPressGestureRecognizer) {
-        let touchPoint = sender.location(in: mapView)
-        let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-        addPin(longitude: newCoordinates.longitude, latitude: newCoordinates.latitude)
+        if(sender.state != .began){
+            let touchPoint = sender.location(in: mapView)
+            let newCoordinates = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+            addPin(longitude: newCoordinates.longitude, latitude: newCoordinates.latitude)
+            return
+        }
     }
     
     // MARK: -Model Functions
@@ -93,6 +96,7 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         // TODO: by pressing on a pin go to photosListViewController
+        mapView.deselectAnnotation(view.annotation! , animated: true)
         let pin: Pin = view.annotation as! Pin
         let photosListVC = storyboard?.instantiateViewController(withIdentifier: "PhotosListViewController") as! PhotosListViewController;
         

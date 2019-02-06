@@ -20,24 +20,15 @@ class FlickrAPI {
         static let NUM_OF_PHOTOS = 20
     }
     
-    enum Sort: String, CaseIterable {
-        case ate_posted_asc = "ate-posted-asc";
-        case date_posted_desc = "date-posted-desc";
-        case date_taken_asc = "date-taken-asc";
-        case date_taken_desc = "date-taken-desc";
-        case interestingness_desc = "interestingness-desc";
-        case interestingness_asc = "interestingness-asc";
-        case relevance
-    }
-    
     let a_a = 0
     static func getListOfPhotosIn(lat: Double, lon: Double, completionHandler: @escaping ([String]) -> Void) {
         
-        let url = "\(Constants.BASE_URL)?api_key=\(Constants.API_KEY)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(lon)&sort=\(String(describing: Sort.allCases.randomElement()))"
+        let url = "\(Constants.BASE_URL)?api_key=\(Constants.API_KEY)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(lon)&page=\((1...10).randomElement() ?? 1)"
         
         Alamofire.request(url).responseJSON { (response) in
+            print("Hi")
             if((response.result.value) != nil) {
-                
+                print("bye")
                 let swiftyJsonVar = JSON(response.result.value!)
                 var photosURL: [String] = []
                 
@@ -47,6 +38,7 @@ class FlickrAPI {
                         photosURL.append(photoURL)
                     }
                 }
+                dump(photosURL)
                 completionHandler(photosURL)
             }
             //present error
