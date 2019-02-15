@@ -1,5 +1,5 @@
 # Virtual Toruest info
-This app is created as a final project of the [“iOS Nanodegree - Udacity](https://www.udacity.com/course/ios-developer-nanodegree--nd003).
+This app is created as a final project of the [iOS Nanodegree - Udacity](https://www.udacity.com/course/ios-developer-nanodegree--nd003).
 
 ## Build
 ### Requirements
@@ -48,7 +48,7 @@ This app uses the following frameworks and APIs:
 | Framework | Description |
 | --- | --- 
 | [CocoaPods](https://github.com/CocoaPods/CocoaPods) | The Cocoa Dependency Manager. |
-| [Alamofire](https://github.com/Alamofire/Alamofire) | Easy HTTP networking in Swift Alamofire. |
+| [Alamofire](https://github.com/Alamofire/Alamofire) | Easy HTTP networking in Swift. |
 | [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) | The better way to deal with JSON data in Swift.|
 | [Kingfisher](https://github.com/onevcat/Kingfisher) | A lightweight, pure-Swift library for downloading and caching images from the web.|
 
