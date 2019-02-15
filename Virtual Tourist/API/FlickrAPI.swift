@@ -20,10 +20,12 @@ class FlickrAPI {
         static let NUM_OF_PHOTOS = 20
     }
     
-    let a_a = 0
-    static func getListOfPhotosIn(lat: Double, lon: Double, completionHandler: @escaping ([String]) -> Void) {
-        
+    static func getListOfPhotosIn(lat: Double, lon: Double, completionHandler: @escaping (Connectivity.Status, [String]?) -> Void) {
         let url = "\(Constants.BASE_URL)?api_key=\(Constants.API_KEY)&method=\(Constants.FLICKR_SEARCH_METHOD)&per_page=\(Constants.NUM_OF_PHOTOS)&format=json&nojsoncallback=?&lat=\(lat)&lon=\(lon)&page=\((1...10).randomElement() ?? 1)"
+        
+        if !Connectivity.isConnectedToInternet {
+            completionHandler(.notConnected, nil)
+        }
         
         Alamofire.request(url).responseJSON { (response) in
             if((response.result.value) != nil) {
@@ -36,10 +38,21 @@ class FlickrAPI {
                         photosURL.append(photoURL)
                     }
                 }
-                completionHandler(photosURL)
+                completionHandler(.connected, photosURL)
+            } else {
+                completionHandler(.other, nil)
             }
-            //present error
         }
         
+    }
+}
+
+class Connectivity {
+    static var isConnectedToInternet: Bool {
+        return NetworkReachabilityManager()!.isReachable
+    }
+    
+    enum Status {
+        case notConnected, connected, other
     }
 }

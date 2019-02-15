@@ -28,11 +28,11 @@ class MapViewController: UIViewController {
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed(sender:)))
         mapView.delegate = self
         mapView.addGestureRecognizer(longPressRecognizer)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: true)
 
         setupFetchedResultsController()
         loadMapAnnotations()
@@ -42,6 +42,14 @@ class MapViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         fetchedResultsController = nil
+    }
+    
+    func setupView() {
+        view.backgroundColor = UIColor.black
+        navigationController?.navigationBar.barStyle = .black
+        
+        let mapRadius = CLLocationDistance(exactly: MKMapRect.world.size.height)!
+        mapView.addOverlay(MKCircle(center: mapView.centerCoordinate, radius: mapRadius))
     }
     
     // MARK: -Setup code
@@ -93,6 +101,15 @@ class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        if overlay.isKind(of: MKCircle.self) {
+            let view = MKCircleRenderer(overlay: overlay)
+            view.fillColor = UIColor.black.withAlphaComponent(0.2)
+            return view
+        }
+        return MKOverlayRenderer(overlay: overlay)
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {

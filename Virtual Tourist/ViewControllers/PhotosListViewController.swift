@@ -35,7 +35,7 @@ class PhotosListViewController: UIViewController {
         setupFetchedResultsController()
         
         setGetNewPhotosButtonEnabled(to: false)
-
+        
         if (fetchedResultsController.sections?[0].numberOfObjects ?? 0 == 0) {
             getPhotos()
         } else {
@@ -79,11 +79,32 @@ class PhotosListViewController: UIViewController {
     
     private func getPhotos() {
         setGetNewPhotosButtonEnabled(to: false)
-        FlickrAPI.getListOfPhotosIn(lat: pin.latitude, lon: pin.longitude) { (photosURL) in
+        FlickrAPI.getListOfPhotosIn(lat: pin.latitude, lon: pin.longitude) { (error, photosURL) in
             // if photos is empty show empty background
-            for photoURL in photosURL {
-                self.addPhoto(url: photoURL)
+            switch error {
+            case .notConnected:
+                DispatchQueue.main.async {
+                    let alertController = UIAlertController(title: "Hmmmm..", message:
+                        "There seems to be no internet connection! please, connect to a network then try again.", preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
+                    self.present(alertController, animated: true, completion: nil)
+                }
+                break
+            case .connected:
+                for photoURL in photosURL! {
+                    self.addPhoto(url: photoURL)
+                }
+                break
+            case .other:
+                DispatchQueue.main.async {
+                    let alertController = UIAlertController(title: "Hmmmm..", message:
+                        "Something bad occured. Please, try again.", preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
+                    self.present(alertController, animated: true, completion: nil)
+                }
+                break
             }
+            
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
                 self.setGetNewPhotosButtonEnabled(to: true)
@@ -122,27 +143,27 @@ class PhotosListViewController: UIViewController {
         }
         getPhotos()
     }
-
+    
 }
 
 extension PhotosListViewController: UICollectionViewDelegateFlowLayout {
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let padding = insets.right * (itemsPerRow + 1)
         let availableWidth = view.frame.width - padding
         let widthOfItem = availableWidth / itemsPerRow
-
+        
         return CGSize(width: widthOfItem, height: widthOfItem)
     }
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
         return insets
     }
-
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
